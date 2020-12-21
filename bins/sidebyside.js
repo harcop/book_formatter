@@ -23,6 +23,7 @@ function processFile (args) {
     let files = args;
     let f = [];
     let j = 0;
+    let _space = [];
     for (let file of files) {
         const ctx = fs.readFileSync(file).toString().split('\n');
         let _maxW = _s;
@@ -31,13 +32,21 @@ function processFile (args) {
                 _maxW = c.length > _maxW ? c.length : _maxW;
             }
         }
+        _space.push(Number(_maxW) + Number(_c));
         let i = 0;
         for(let c of ctx) {
             if (f[i] === undefined) {
                 let k = j*_maxW
                 if (k > 0) {
-                    let _m = Number(k) + Number(_c);
-                    f.push(' '.repeat(_m));
+                    // let _m = Number(k) + Number(_c);
+                    // f.push(' '.repeat(_m));
+                    let _j = j;
+                    let _sp = 0;
+                    while(_j > 0) {
+                        _j -= 1;
+                        _sp += _space[_j]
+                    }
+                    f.push(' '.repeat(_sp));
                 } else {
                     f.push('');
                 }
@@ -62,8 +71,15 @@ function processFile (args) {
                 if (f[i] === undefined) {
                     let k = j*_maxW
                     if (k > 0) {
-                        let _m = Number(k) + Number(_c);
-                        f.push(' '.repeat(_m));
+                        // let _m = Number(k) + Number(_c);
+                        // f.push(' '.repeat(_m));
+                        let _j = j;
+                        let _sp = 0;
+                        while(_j > 0) {
+                            _j -= 1;
+                            _sp += _space[_j]
+                        }
+                        f.push(' '.repeat(_sp));
                     } else {
                         f.push('');
                     }
@@ -74,11 +90,17 @@ function processFile (args) {
         }
         j += 1;
     }
-    console.log(f);
+    // console.log(f)
     let _f = '';
+    let ttl = f[0].length;
     for(let ff of f) {
-        
-        _f += `${ff}` + '\n';
+        let lng = ff.length;
+        let pad = 0;
+        if (lng < ttl) {
+            pad = ttl - lng;
+            console.log(pad, 'pad');
+        }
+        _f += `${ff}` + ' '.repeat(pad) + '\n';
     };
     console.log(_f.substring(0, _f.length-1))
     return _f
